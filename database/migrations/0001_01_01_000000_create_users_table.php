@@ -35,6 +35,19 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
+
+        Schema::create('borrowings', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('item_id')->constrained()->onDelete('cascade');
+            $table->integer('quantity_borrowed');
+            $table->date('borrow_date');
+            $table->date('return_date');
+            $table->date('actual_return_date')->nullable();
+            $table->string('status')->default('borrowed'); // borrowed, returned, overdue
+            $table->text('purpose')->nullable(); // tujuan peminjaman
+            $table->timestamps();
+        });
     }
 
     /**
@@ -45,5 +58,6 @@ return new class extends Migration
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('borrowings');
     }
 };
